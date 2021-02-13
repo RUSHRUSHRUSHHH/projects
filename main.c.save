@@ -63,7 +63,7 @@ int main() {
         if (str[7] == '-'){
             for (n = 8; n < k; n++) {
                 if (str[n] >= 48 && str[n]<=57)
-                numnum++;
+                    numnum++;
                 numnumber[n] = str[n] - '0';
             }
             for (n = numnum + 7; n > 7; n--) {
