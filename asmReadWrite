@@ -1,0 +1,92 @@
+global  _start					
+ 
+N equ 100						
+ 
+ 
+section .bss						
+var_read:	resb N										
+ 
+section .text
+errormessage: db "You was writed incorrect symbol in text.. Please, write only the latin letters", 80 
+_start:
+	call funclittlebig			
+	call write			
+	call exit					
+ 
+funclittlebig:					
+	call read					
+	mov rcx, N					
+	littlebig:						
+		mov rdx, N
+		sub rdx, rcx	
+		xor rbx, rbx				
+		mov bl, [var_read + rdx]
+		call letterpolice
+		cmp bl, 32
+		je You_Are_Enter
+		cmp bl, 96 
+		jl little
+		sub bl, 32
+		jmp l1
+		little:
+		add bl, 32
+		l1:
+		You_Are_Enter:
+		mov [var_read + rdx], bl
+		loop littlebig
+ 
+	ret					
+ 
+ 
+letterpolice:
+	cmp bl, 64
+	jg here
+	mov bh, bl
+	cmp bh, 32
+	je okay
+	jg error
+	here
+	xor bh, bh
+	cmp bl, 91
+	je error
+	cmp bl, 92
+	je error
+	cmp bl, 93
+	je error
+	cmp bl, 94
+	je error
+	cmp bl, 95
+	je error
+	cmp bl, 96
+	je error
+	cmp bl, 123
+	jge error
+	okay:	
+ret
+	
+read:						
+	mov rax, 0			
+	mov rdi, 0		 
+	mov rsi, var_read			
+	mov rdx, N					
+	syscall						 
+	ret						
+ 
+write:						
+	mov rax, 1					
+	mov rdi, 1					
+	mov rsi, var_read				
+	mov rdx, N					
+	syscall						
+	ret
+error:
+	mov rax, 1
+	mov rdi, 1
+	mov rsi, errormessage
+	mov rdx, 78
+	syscall
+exit:						
+	mov rax, 60					
+	xor rdi, rdi					
+	syscall
+	ret
