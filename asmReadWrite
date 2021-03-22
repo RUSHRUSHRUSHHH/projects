@@ -21,9 +21,22 @@ funclittlebig:
 		sub rdx, rcx	
 		xor rbx, rbx				
 		mov bl, [var_read + rdx]
-		call letterpolice
-		cmp bl, 32
-		je You_Are_Enter
+		cmp bl, 64
+		jle You_Are_NOTletter
+		cmp bl, 91
+		je You_Are_NOTletter
+		cmp bl, 92
+		je You_Are_NOTletter
+		cmp bl, 93
+		je You_Are_NOTletter
+		cmp bl, 94
+		je You_Are_NOTletter
+		cmp bl, 95
+		je You_Are_NOTletter
+		cmp bl, 96
+		je You_Are_NOTletter
+		cmp bl, 123
+		jge You_Are_NOTletter
 		cmp bl, 96 
 		jl little
 		sub bl, 32
@@ -31,39 +44,14 @@ funclittlebig:
 		little:
 		add bl, 32
 		l1:
-		You_Are_Enter:
+		You_Are_NOTletter:
 		mov [var_read + rdx], bl
 		loop littlebig
  
 	ret					
  
  
-letterpolice:
-	cmp bl, 64
-	jg here
-	mov bh, bl
-	cmp bh, 32
-	je okay
-	jg error
-	here
-	xor bh, bh
-	cmp bl, 91
-	je error
-	cmp bl, 92
-	je error
-	cmp bl, 93
-	je error
-	cmp bl, 94
-	je error
-	cmp bl, 95
-	je error
-	cmp bl, 96
-	je error
-	cmp bl, 123
-	jge error
-	okay:	
-ret
-	
+ 
 read:						
 	mov rax, 0			
 	mov rdi, 0		 
@@ -79,12 +67,12 @@ write:
 	mov rdx, N					
 	syscall						
 	ret
-error:
-	mov rax, 1
-	mov rdi, 1
-	mov rsi, errormessage
-	mov rdx, 78
-	syscall
+;error:
+	;mov rax, 1
+	;mov rdi, 1
+	;mov rsi, errormessage
+	;mov rdx, 78
+	;syscall
 exit:						
 	mov rax, 60					
 	xor rdi, rdi					
