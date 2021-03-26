@@ -1,0 +1,67 @@
+global  _start					
+ 
+N equ 72					
+ 
+ 
+section .bss						
+var_paint:	resb N										
+ 
+section .text
+
+_start:
+	call creating    ;создаю строку длиной N заполненную нулями
+	call funcdraw			
+	call write			
+	call exit					
+ 
+funcdraw:					
+	mov rcx, N					
+	paintdraw:						
+		mov rdx, N
+		sub rdx, rcx	
+		mov bl, 2
+		mov rax, rdx ; чтобы узнать остаток от деления на 2 от rdx
+		div bl
+		cmp ah, 1
+		jne it_is_0
+		mov bl, 49
+		mov rdx, N; возвращаем в rdx его значение
+		sub rdx, rcx
+		mov [var_paint + rdx], bl ; ставим единичку если нечётный номер
+		it_is_0:
+		mov rax, rdx; поставим \n
+		mov bl, 9
+		div bl
+		cmp ah, 0
+		jne not_newline
+		mov bl, 10
+		mov [var_paint + rdx], bl
+		
+		not_newline:
+
+		loop paintdraw
+ 
+	ret					
+ 
+ 
+ 
+creating:
+	mov bh, 48 ;
+	mov rcx, N
+	create:
+	mov [var_paint + rcx], bh 
+	loop create
+	ret						
+ 
+write:						
+	mov rax, 1					
+	mov rdi, 1					
+	mov rsi, var_paint				
+	mov rdx, N					
+	syscall						
+	ret
+exit:						
+	mov rax, 60					
+	xor rdi, rdi					
+	syscall
+	ret
