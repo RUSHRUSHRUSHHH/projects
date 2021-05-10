@@ -1,14 +1,18 @@
-global  _start					
+global  main				
  
 N equ 72					
  
  
 section .bss						
 var_paint:	resb N										
- 
+var_fd: resq 1 
+
+section .data
+name: db "chess.txt", 0
+
 section .text
 
-_start:
+main:
 	call creating    ;создаю строку длиной N заполненную нулями
 	call funcdraw			
 	call write			
@@ -54,12 +58,24 @@ creating:
 	ret						
  
 write:						
-	mov rax, 1					
-	mov rdi, 1					
-	mov rsi, var_paint				
-	mov rdx, N					
-	syscall						
-	ret
+    mov rax, 2
+    mov rdi, name
+    mov rsi,2
+    syscall
+    mov [var_fd], rax
+
+    mov rax, 1
+    mov rdi, [var_fd]
+    mov rsi, var_paint
+    mov rdx, N
+    syscall
+
+    mov rax, 3
+    mov rdi, [var_fd]
+    syscall
+
+    ret
+
 exit:						
 	mov rax, 60					
 	xor rdi, rdi					
