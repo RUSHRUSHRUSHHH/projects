@@ -1,4 +1,4 @@
-lobal main
+global main
 
 
 extern printf
@@ -16,8 +16,15 @@ section .text
 
 main:
 
+   call calculate_answer ; функция, указанная в усл. задачи
+   call print_answer ; вывод ответа функции в стандартный вывод
+   ret
 
 
+
+
+
+   calculate_answer:
    push rbp
    mov rbp,rsp
    mov qword [rbp],5
@@ -25,14 +32,22 @@ main:
    mov rdx, qword [rbp]
    mov rax, qword [rbp-8]
    add rax,rdx
-   mov qword [var_write],rax
+   mov qword [rbp - 16],rax
    pop rbp
+   ret
 
+
+
+
+
+   print_answer:
    push rbp
+   mov rbp, rsp
+   mov rax, qword [rbp-16]
+   mov [var_write], rax
    mov rdi, format
    mov rsi, [var_write]
    mov rax, 0 
    call printf
    pop rbp
-
    ret
