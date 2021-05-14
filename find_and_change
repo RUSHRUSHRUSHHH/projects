@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <malloc.h>
 #include <stdlib.h>
 
 long int filesize( FILE *fp ) {
@@ -12,25 +13,10 @@ long int filesize( FILE *fp ) {
     return( size_of_file );
   }
 
-void main(){
-
-    char word_for_change[256];
-    char word_to_change[256];
-    char name_file[30];
-
-    printf ("Write name of your file, please\n");
-    gets(name_file);
-
-    printf ("Write word you want to change\n"); //кол-во символов в словах должно быть одинаково
-
-    gets(word_for_change);
-
-    printf ("Write word to change\n");
-
-    gets(word_to_change);
+void main(int argc, char **argv){
 
     int length;
-    length = strlen(word_for_change);
+    length = strlen(argv[2]);
 
     char ch;
     char str[100000];
@@ -41,7 +27,7 @@ void main(){
 
     FILE* fin ;
 
-    fin = fopen(name_file, "r+");
+    fin = fopen(argv[1], "r+");
 
     while ( count != filesize(fin) ) {   //считали все символы из файла
         ch = fgetc(fin);
@@ -49,9 +35,9 @@ void main(){
         i++;
         count++;
     }
-      for (i = 0; i < count; i++){    //найдём и заменим то, что надо, остальное не тронем
+    for (i = 0; i < count; i++){    //найдём и заменим то, что надо, остальное не тронем
         for (j = 0; j < length; j++) {
-            if (str[i] == word_for_change[j]){
+            if (str[i] == (argv[2])[j]){
                 i++;
                 kk++;
 
@@ -66,8 +52,8 @@ void main(){
         }
         i = i - kk;
         if (kk == length) {
-             for (j = 0; j < length; j++) {
-                str[i] = word_to_change[j];
+            for (j = 0; j < length; j++) {
+                str[i] = (argv[3])[j];
                 i++;
             }
             i = i - kk;
@@ -77,15 +63,12 @@ void main(){
 
     fclose(fin);
 
-    fin = fopen(name_file, "w");  //удалили всё из файла  
+    fin = fopen(argv[1], "w");  //удалили всё из файла  
 
     fclose(fin);
 
-    fin = fopen(name_file, "r+"); //записали в файл обратно всё то, что там было, НО с уже выполненной заменой слова
+    fin = fopen(argv[1], "r+"); //записали в файл обратно всё то, что там было, НО с уже выполненной заменой слова
     fwrite (str, 1, count, fin);
     fclose(fin);
 
 }
-                                                                                                                                                                                         89,1        Внизу
-
-
